@@ -28,3 +28,7 @@ function getQueryParamsFromString(queryString) {
 let queryString = "?name=JohnDoe&age=25";
 let params = getQueryParamsFromString(queryString);
 console.log(params); // { name: "JohnDoe", age: "25" }
+
+function isEmptyObject(obj) {
+    return Object.keys(obj).length === 0;
+}
