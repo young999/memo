@@ -32,3 +32,13 @@ console.log(params); // { name: "JohnDoe", age: "25" }
 function isEmptyObject(obj) {
     return Object.keys(obj).length === 0;
 }
+
+
+function removeUpToChar(str, char) {
+    const charIndex = str.indexOf(char);
+    if (charIndex === -1) {
+        return str; // 문자가 없으면 원래 문자열 반환
+    }
+    return str.slice(charIndex + 1);
+}
+
