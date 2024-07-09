@@ -1,4 +1,17 @@
 # memo
+
+  public static String maskName(String fullName) {
+        if (fullName == null || fullName.isEmpty()) {
+            return "";
+        }
+        
+        // 성은 첫 글자로 가정
+        String lastName = fullName.substring(0, 1);
+        String maskedName = lastName + "*".repeat(fullName.length() - 1);
+        
+        return maskedName;
+    }
+
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
