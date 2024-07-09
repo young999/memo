@@ -1,4 +1,23 @@
 # memo
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Main {
+    public static void main(String[] args) {
+  
+        String maskingStr = "아리엘";
+        String maskingResult = "";
+				
+        if (maskingStr.length() >= 3) {
+            maskingResult = maskingStr.replaceAll("(?<=.{2}).", "*");
+        } else { // 외자인 경우
+            maskingResult = maskingStr.replaceAll("(?<=.{1}).", "*");
+        }
+    
+        System.out.println(maskingResult); // 아리*
+    }
+}
 
 https://www.gov.kr/mw/AA020InfoCappView.do?HighCtgCD=&CappBizCD=12100000016
 
