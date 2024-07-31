@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th=http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>index.html</title>
+</head>
+<body>
+<div style="display:none;">
+    <h1 th:text="'admin bridge 페이지'"></h1>
+    <p> empId :   [[${empId}]] </p>
+    <p> empno :  [[${empno}]]</p>
+    <p> membertype :  [[${membertype}]]</p>
+    <p> accessToken :  [[${accessToken}]]</p>_
+    <p> redirect :  [[${redirect}]]</p>
+</div>
+
+<script >
+    let empId = '[[${empId}]]';                    // 관리자 사원 ID
+    let empno = '[[${empno}]]';                    // 관리자 사원 번호
+    let authLvl = '[[${authLvl}]]';                // 관리자 권한 레벨
+    let membertype = '[[${membertype}]]';          // 멤버 유형
+    let accessToken = '[[${accessToken}]]';        // 토큰
+    let redirect = '[[${redirect}]]';              // 이동할 페이지
+
+    if(!accessToken){
+        alert('토큰이 없거나 유효하지 않은 토큰입니다.');
+        localStorage.clear();
+    }else{
+        localStorage.setItem('empId', empId);
+        localStorage.setItem('empno', empno);
+        localStorage.setItem('authLvl', authLvl);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('membertype', membertype);
+    }
+
+    setTimeout(function(){
+        location.replace(redirect);
+    }, 500);
+
+
+</script>
+
+
+
+</body>
+</html>
