@@ -74,3 +74,17 @@ function removeUpToChar(str, char) {
     return str.slice(charIndex + 1);
 }
 
+
+// 특정 쿠키 가져오기 함수
+function getCookie(name) {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split('; ');
+
+    for (let cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split('=');
+        if (cookieName === decodeURIComponent(name)) {
+            return decodeURIComponent(cookieValue);
+        }
+    }
+    return null;
+}
