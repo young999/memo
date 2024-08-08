@@ -1,0 +1,24 @@
+  /**
+     * 주어진 날짜 문자열을 'yyyy-MM-dd' 형식으로 변환합니다.
+     *
+     * @param dateStr 변환할 날짜 문자열 (예: '2023년7월18일')
+     * @return 변환된 날짜 문자열 (예: '2023-07-18')
+     * @throws IllegalArgumentException 유효하지 않은 날짜 형식일 경우 예외 발생
+     */
+    public static String formatDate(String dateStr) {
+        try {
+            // 입력 날짜 형식 정의 (예: '2023년7월18일')
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy년M월d일");
+            
+            // 출력 날짜 형식 정의 (예: 'yyyy-MM-dd')
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            
+            // 입력 문자열을 LocalDate 객체로 변환
+            LocalDate date = LocalDate.parse(dateStr, inputFormatter);
+            
+            // LocalDate 객체를 원하는 출력 형식의 문자열로 변환
+            return date.format(outputFormatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("유효하지 않은 날짜 형식입니다: " + dateStr, e);
+        }
+    }
