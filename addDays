@@ -1,0 +1,41 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public class DateUtil {
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    /**
+     * 주어진 날짜 문자열에 일수를 더합니다.
+     *
+     * @param dateStr 기본 날짜 문자열 (예: '2024-07-18')
+     * @param daysToAdd 더할 일수
+     * @return 새로운 날짜 문자열 (예: '2024-07-28')
+     * @throws IllegalArgumentException 유효하지 않은 날짜 형식일 경우 예외 발생
+     */
+    public static String addDays(String dateStr, int daysToAdd) {
+        try {
+            // 문자열을 LocalDate 객체로 변환
+            LocalDate date = LocalDate.parse(dateStr, DATE_FORMATTER);
+
+            // 주어진 일수를 더함
+            LocalDate newDate = date.plusDays(daysToAdd);
+
+            // 새로운 날짜를 문자열로 변환하여 반환
+            return newDate.format(DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("유효하지 않은 날짜 형식입니다.", e);
+        }
+    }
+
+    public static void main(String[] args) {
+        // 테스트
+        String date = "2024-07-18";
+        int daysToAdd = 10;
+
+        String newDate = addDays(date, daysToAdd);
+        System.out.println("Original Date: " + date);
+        System.out.println("New Date after adding " + daysToAdd + " days: " + newDate);
+    }
+}
