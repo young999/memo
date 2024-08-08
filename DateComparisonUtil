@@ -1,0 +1,44 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public class DateComparisonUtil {
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    /**
+     * 주어진 두 날짜 문자열을 비교합니다.
+     *
+     * @param dateStr1 첫 번째 날짜 문자열 (예: '2023-07-18')
+     * @param dateStr2 두 번째 날짜 문자열 (예: '2023-07-19')
+     * @return -1 if dateStr1 < dateStr2, 0 if dateStr1 == dateStr2, 1 if dateStr1 > dateStr2
+     * @throws IllegalArgumentException 유효하지 않은 날짜 형식일 경우 예외 발생
+     */
+    public static int compareDates(String dateStr1, String dateStr2) {
+        try {
+            // 문자열을 LocalDate 객체로 변환
+            LocalDate date1 = LocalDate.parse(dateStr1, DATE_FORMATTER);
+            LocalDate date2 = LocalDate.parse(dateStr2, DATE_FORMATTER);
+
+            // LocalDate 객체를 비교
+            return date1.compareTo(date2);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("유효하지 않은 날짜 형식입니다.", e);
+        }
+    }
+
+    public static void main(String[] args) {
+        // 테스트
+        String date1 = "2023-07-18";
+        String date2 = "2023-07-19";
+        
+        int result = compareDates(date1, date2);
+        if (result < 0) {
+            System.out.println(date1 + "은(는) " + date2 + "보다 이전 날짜입니다.");
+        } else if (result == 0) {
+            System.out.println(date1 + "은(는) " + date2 + "과(와) 같은 날짜입니다.");
+        } else {
+            System.out.println(date1 + "은(는) " + date2 + "보다 이후 날짜입니다.");
+        }
+    }
+}
