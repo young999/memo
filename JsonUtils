@@ -1,0 +1,28 @@
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+public class JsonUtils {
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    /**
+     * JSON 문자열에서 특정 키의 값을 가져오는 메서드
+     *
+     * @param jsonString JSON 형식의 문자열
+     * @param key 추출하고자 하는 키
+     * @return 해당 키의 값 (없을 경우 null)
+     */
+    public static String getValueByKey(String jsonString, String key) {
+        try {
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
+            JsonNode valueNode = jsonNode.get(key);
+            if (valueNode != null) {
+                return valueNode.asText();
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
