@@ -1,0 +1,83 @@
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+
+@Configuration
+public class JacksonConfig {
+
+    private static final int MAX_STRING_LENGTH = 100;
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // 커스텀 모듈 추가
+        SimpleModule module = new SimpleModule();
+        module.setDeserializerModifier(new StringLengthCheckingDeserializerModifier(MAX_STRING_LENGTH));
+
+        objectMapper.registerModule(module);
+        return objectMapper;
+    }
+}
+
+// Jackson용 커스텀 DeserializerModifier
+import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
+public class StringLengthCheckingDeserializerModifier extends BeanDeserializerModifier {
+
+    private final int maxLength;
+
+    public StringLengthCheckingDeserializerModifier(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    @Override
+    public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
+        return new StringLengthCheckingDeserializer((StdDeserializer<?>) deserializer, maxLength);
+    }
+}
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
+import java.io.IOException;
+
+public class StringLengthCheckingDeserializer extends StdDeserializer<Object> {
+
+    private final StdDeserializer<?> defaultDeserializer;
+    private final int maxLength;
+
+    public StringLengthCheckingDeserializer(StdDeserializer<?> defaultDeserializer, int maxLength) {
+        super(defaultDeserializer.getValueType());
+        this.defaultDeserializer = defaultDeserializer;
+        this.maxLength = maxLength;
+    }
+
+    @Override
+    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+        JsonNode node = p.readValueAsTree();
+        checkStringLength(node);
+        return defaultDeserializer.deserialize(p, ctxt);
+    }
+
+    private void checkStringLength(JsonNode node) throws JsonParseException {
+        if (node.isTextual() && node.asText().length() > maxLength) {
+            throw new JsonParseException(null, "String value exceeds max length of " + maxLength);
+        }
+        node.elements().forEachRemaining(this::checkStringLength);
+    }
+}
